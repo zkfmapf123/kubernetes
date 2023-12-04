@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolling
+spec:
+  ## Rollup Config
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1 ## ++1
+      maxUnavailable: 0
+  minReadySeconds: 5 ## 새로운 pod가 띄워지고 나서 5초간 대기
+  revisionHistoryLimit: 5 ## 새로운 Replicaset이 만들어지고 나서 Revision을 5개씩 보유
+  replicas: 10 ## 현재 Replicaset
+  selector:
+    matchLabels:
+      app: rolling
+  template:
+    metadata:
+      name: rolling
+      labels:
+        app: rolling
+    spec:
+      containers:
+        - name: nginx
+          image: nginxdemos/hello:plain-text
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
