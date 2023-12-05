@@ -50,8 +50,8 @@ module "default-public-ins" {
   instance_subnet_id = "subnet-0082ef1bd2a8cb458"
   instance_sg_ids    = [aws_security_group.minikube-sg.id]
 
-  instance_ami  = "ami-08f17b3a460af7c2b" ## Linux amazon 2
-  instance_type = "t4g.small"             ## t2.micro
+  instance_ami  = "ami-01123b84e2a4fba05" ## Linux amazon 2
+  instance_type = "t3.small"              ## t2.micro
 
   instance_ip_attr = {
     is_public_ip  = true
@@ -70,6 +70,12 @@ module "default-public-ins" {
     is_use_key_path   = true
     key_name          = ""
     key_path          = "~/.ssh/id_rsa.pub"
+  }
+
+  instance_cpu_option = {
+    is_alloc_cpu_option = false
+    core_count          = 2
+    threads_per_core    = 2
   }
 
   instance_tags = {
