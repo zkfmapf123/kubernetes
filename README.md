@@ -16,6 +16,10 @@
 
 [ConfigMap](./config-map.md)
 
+</hr>
+
+[Secret](./secret.md)
+
 ### 유용한 명령어
 
 ```sh
@@ -25,6 +29,9 @@
     ## api-resources
     ## api 확인
     kubectl api-resourecs | grep ''
+
+    ## Watch
+    kubectl get pods -w -o wide
 ```
 
 ### Trouble Shooting
