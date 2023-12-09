@@ -1,5 +1,17 @@
 # Container-Orchestration System
 
+### Setting to Infra
+
+```sh
+    cd infra/minikube
+    terraform init && terraform apply
+
+    ## scp, up, down command
+    make upload ## Copy to Kuberentes Config files
+    make up ## Instance Stop -> Running
+    make down ## Instance Running -> Stop
+```
+
 ### Kunbernetes
 
 [Kubernetes-Orchestration](./kubernetes.md)
