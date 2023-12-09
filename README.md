@@ -14,6 +14,8 @@
 
 </hr>
 
+[ConfigMap](./config-map.md)
+
 ### 유용한 명령어
 
 ```sh

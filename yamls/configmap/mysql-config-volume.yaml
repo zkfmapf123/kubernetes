@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      name: mysql
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:5.7
+          ## configMap 을 일단 잡아놓고
+          envFrom:
+            - configMapRef:
+                name: mysql-config
+          ## /tmp/config에 volume으로 생성
+          volumeMounts:
+            - mountPath: /tmp/config
+              name: mysql-config
+      volumes:
+        - name: mysql-config
+          configMap:
+            name: mysql-config

@@ -36,18 +36,18 @@
     alias kc='kubectl'
 
     ## Common
-    cd services
+    cd yamls/services
     kc apply -f deployment.yaml
 
     ######## Clusterip
-    cd services/clusterip
+    cd yamls/services/clusterip
     kc apply -f service.yaml
 
     ## ClusterIP의 Cidr Range
     kc cluster-info dump | grep -m 1 service-cluster-ip-range
 
     ######## Node Port
-    cd service/node-port
+    cd yamls/service/node-port
     kc apply -f service.yaml
 
 ```
