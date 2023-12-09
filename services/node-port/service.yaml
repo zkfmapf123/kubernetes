@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-port
+  labels:
+    app: node-port
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 80
+      # nodePort: 31000 ## 해당값을 정의하지 않으면 사용가능한 포트로 알아서 mapping
+  selector:
+    app: webserver

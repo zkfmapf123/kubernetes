@@ -6,4 +6,6 @@ external_ip=$(aws ec2 describe-instances --filters \
 
 echo $external_ip
 
-scp -i ~/.ssh/id_rsa -r ./yamls ec2-user@${external_ip}:~/
+scp -i ~/.ssh/id_rsa -r \
+./deployments ./services \
+ec2-user@${external_ip}:~/
