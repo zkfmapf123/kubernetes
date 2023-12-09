@@ -80,7 +80,8 @@ module "default-public-ins" {
 
   instance_tags = {
     "Monitoring" : true,
-    "MadeBy" : "terraform"
+    "MadeBy" : "terraform",
+    "Name" : "minikube-연습용"
   }
 
   user_data_file = "./user_data.sh"
