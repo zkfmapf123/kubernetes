@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hello-every-min
+spec:
+  schedule: '*/1 * * * *' ## cron
+  successfulJobsHistoryLimit: 5 ## 성공한 job 5개만 유지
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: hello
+              image: ubuntu:focal
+              command: ['sh', '-c', 'echo hello world']

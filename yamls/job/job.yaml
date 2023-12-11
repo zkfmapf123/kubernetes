@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job
+spec:
+  activeDeadlineSeconds: 60 ## 60초 이내에 끝나지 않으면 종료
+  completions: 10 ## number of pods
+  parallelism: 2 ## 2개씩 병렬 처리
+  template:
+    spec:
+      restartPolicy: Never ## never, onFailure로 정의해야 함
+      containers:
+        - name: job
+          image: ubuntu:focal
+          command: ['sh', '-c', 'sleep 2; echo hello world']
