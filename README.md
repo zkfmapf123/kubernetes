@@ -44,6 +44,10 @@
 
 [daemonSet](./daemonSet.md)
 
+</hr>
+
+[ingress](./ingress.md)
+
 ### 유용한 명령어
 
 ```sh
