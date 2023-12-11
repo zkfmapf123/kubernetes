@@ -36,6 +36,14 @@
 
 [Namespace, ResourceQuata, LimitRange](./namespace.md)
 
+</hr>
+
+[job](./job.md)
+
+</hr>
+
+[daemonSet](./daemonSet.md)
+
 ### 유용한 명령어
 
 ```sh
