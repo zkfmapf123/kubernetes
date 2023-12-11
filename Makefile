@@ -6,3 +6,6 @@ up:
 
 down:
 	@cd command && sh down.sh
+
+ip:
+	@cd command && sh ip.sh

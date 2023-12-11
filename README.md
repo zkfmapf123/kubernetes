@@ -32,6 +32,10 @@
 
 [Secret](./secret.md)
 
+</hr>
+
+[Namespace, ResourceQuata, LimitRange](./namespace.md)
+
 ### 유용한 명령어
 
 ```sh
