@@ -71,6 +71,11 @@ module "eks" {
       username = "admin"
       groups   = ["system:masters"]
     },
+    {
+      userarn  = "arn:aws:iam::182024812696:role/AWSReservedSSO_AdministratorAccess_18f0ecd34fab4ea6"
+      username = "leedonggyu"
+      groups   = ["system:masters"]
+    }
   ]
 
   aws_auth_accounts = [
