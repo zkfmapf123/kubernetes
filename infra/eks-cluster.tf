@@ -68,8 +68,6 @@ module "eks" {
 #   resource_id = each.value
 #   key         = "kubernetes.io/role/internal-elb"
 #   value       = "1"
-
-#   depends_on = [module.network]
 # }
 
 # resource "aws_ec2_tag" "private_subnet_cluster_tag" {
@@ -77,9 +75,6 @@ module "eks" {
 #   resource_id = each.value
 #   key         = "kubernetes.io/cluster/${local.cluster_name}"
 #   value       = "owned"
-
-
-#   depends_on = [module.network]
 # }
 
 # resource "aws_ec2_tag" "private_subnet_karpenter_tag" {
@@ -87,9 +82,6 @@ module "eks" {
 #   resource_id = each.value
 #   key         = "karpenter.sh/discovery/${local.cluster_name}"
 #   value       = local.cluster_name
-
-
-#   depends_on = [module.network]
 # }
 
 # // 퍼블릭 서브넷 태그
@@ -98,6 +90,4 @@ module "eks" {
 #   resource_id = each.value
 #   key         = "kubernetes.io/role/elb"
 #   value       = "1"
-
-#   depends_on = [module.network]
 # }

@@ -26,38 +26,48 @@ resource "aws_iam_role" "eks-worker-role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "worker_policy_attach" {
-  for_each = {
-    for i, v in var.worker_dependency_policy :
-    i => v
-  }
-
-  policy_arn = each.value
+resource "aws_iam_role_policy_attachment" "att-1" {
+  policy_arn = var.worker_dependency_policy[0]
   role       = aws_iam_role.eks-worker-role.name
 }
 
-resource "aws_eks_node_group" "node-group" {
+resource "aws_iam_role_policy_attachment" "att-2" {
+  policy_arn = var.worker_dependency_policy[1]
+  role       = aws_iam_role.eks-worker-role.name
+}
+
+resource "aws_iam_role_policy_attachment" "att-3" {
+  policy_arn = var.worker_dependency_policy[2]
+  role       = aws_iam_role.eks-worker-role.name
+}
+
+resource "aws_iam_role_policy_attachment" "att-4" {
+  policy_arn = var.worker_dependency_policy[3]
+  role       = aws_iam_role.eks-worker-role.name
+}
+
+resource "aws_eks_node_group" "initial-node-group" {
   cluster_name    = module.eks.cluster_name
-  node_group_name = "initial"
-
-  instance_types = ["t4g.small"]
-
-  capacity_type = "SPOT"
-  ami_type      = "AL2_ARM_64"
-
-  node_role_arn = aws_iam_role.eks-worker-role.arn
-  subnet_ids    = local.private_subnets
+  node_group_name = "initial-node-group"
+  node_role_arn   = aws_iam_role.eks-worker-role.arn
+  subnet_ids      = local.private_subnets
 
   scaling_config {
     desired_size = 2
-    min_size     = 2
     max_size     = 3
+    min_size     = 1
   }
 
-  tags = {
-    "kubernetes.io/role/internal-elb"              = "1"
-    "kubernetes.io/cluster/${local.cluster_name}"  = "owned"
-    "karpenter.sh/discovery/${local.cluster_name}" = local.cluster_name
-    "Name" : "worker-node"
-  }
+  instance_types = ["t4g.small"]
+  disk_size      = 20
+  capacity_type  = "SPOT"
+  ami_type       = "AL2_ARM_64"
+
+  ## 이게 엄청 중요함
+  depends_on = [
+    aws_iam_role_policy_attachment.att-1,
+    aws_iam_role_policy_attachment.att-2,
+    aws_iam_role_policy_attachment.att-3,
+    aws_iam_role_policy_attachment.att-4
+  ]
 }
