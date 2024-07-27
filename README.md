@@ -2,14 +2,29 @@
 
 ```sh
     ## module.network 부터 apply
-    terraform apply -target module.network
+    cd infra/clsuter terraform apply -target module.network
+    cd infra/cluster terraform apply 
+
+    ## kubeconfig 설정 (하단 Kubectl 클러스터 접근 참조)
+    ***
+
+    ## lb_controller
+    cd infra/lb-controller kubectl apply -f cert-manager.yaml ## cert-manager object(NS) 생성
+    cd infra/lb-controller terraform apply 
+    cd infra/lb-controller kubectl apply -f service-account.yaml ## service-account 생성
+    
+
+    ## kubectl alias
+    alias k='kubectl'
 ```
 
 ## Folder Architecture
 
 ```sh
-  |- infra         ## terraform
-  |- kube-objects  ## kubernetes Object
+  |- infra                ## terraform 
+    |- cluster
+    |- lb_controller
+  |- kube-objects         ## kubernetes Object
   Makefile 
 ```
 
@@ -56,3 +71,50 @@ node_security_group_additional_rules = {
   }
 ```
 - eks-node-group을 따로 구성 (eks-node-group.tf)
+
+### lb contorller 설정 시, webhook 이슈
+
+```sh
+Error from server (InternalError): error when creating "controller.yaml": Internal error occurred: failed calling webhook "webhook.cert-manager.io": failed to call webhook: Post "https://cert-manager-webhook.cert-manager.svc:443/validate?timeout=30s": no endpoints available for service "cert-manager-webhook"
+Error from server (InternalError): error when creating "controller.yaml": Internal error occurred: failed calling webhook "webhook.cert-manager.io": failed to call webhook: Post "https://cert-manager-webhook.cert-manager.svc:443/validate?timeout=30s": no endpoints available for service "cert-manager-webhook"
+```
+
+- cert-manager의 endpoint 설정이 되어있는지 확인해봐야 함
+
+```sh
+
+## cert-manager가 잘 떠있는지 확인
+kubectl get pods -A | grep cert-manager
+
+## cert-manager service 확인
+kubectl -n cert-manager describe service cert-manager-webhook
+
+Name:              cert-manager-webhook
+Namespace:         cert-manager
+Labels:            app=webhook
+                   app.kubernetes.io/component=webhook
+                   app.kubernetes.io/instance=cert-manager
+                   app.kubernetes.io/name=webhook
+                   app.kubernetes.io/version=v1.15.1
+Annotations:       <none>
+Selector:          app.kubernetes.io/component=webhook,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=webhook
+Type:              ClusterIP
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                172.20.89.251
+IPs:               172.20.89.251
+Port:              https  443/TCP
+TargetPort:        https/TCP
+Endpoints:                              ## 이거없음...
+Session Affinity:  None
+```
+
+- ETCD 용량이 부족하다고 함
+
+![issue-3]
+<a href="https://cert-manager.io/docs/troubleshooting/webhook/"> Issue Page </a>
+<a href="https://help.ovhcloud.com/csm/en-gb-public-cloud-kubernetes-etcd-quota-error?id=kb_article_view&sysparm_article=KB0049739"> 문제해결 </a>
+
+- CloudWatch 를 활용하여 API-Server 로그를 확인하자
+
+![issue-4](./public/issue-4.png)

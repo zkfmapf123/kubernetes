@@ -53,9 +53,9 @@ resource "aws_eks_node_group" "initial-node-group" {
   subnet_ids      = local.private_subnets
 
   scaling_config {
-    desired_size = 2
-    max_size     = 3
-    min_size     = 1
+    desired_size = 3
+    max_size     = 5
+    min_size     = 3
   }
 
   instance_types = ["t4g.small"]
@@ -68,6 +68,7 @@ resource "aws_eks_node_group" "initial-node-group" {
     aws_iam_role_policy_attachment.att-1,
     aws_iam_role_policy_attachment.att-2,
     aws_iam_role_policy_attachment.att-3,
-    aws_iam_role_policy_attachment.att-4
+    aws_iam_role_policy_attachment.att-4,
+    module.eks
   ]
 }

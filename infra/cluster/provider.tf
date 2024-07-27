@@ -59,3 +59,12 @@ provider "kubectl" {
     args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_id]
   }
 }
+
+########################################## Terraform backend
+terraform {
+  backend "s3" {
+    bucket = "dk-state-bucket"
+    key    = "donggyu-eks/terraform.tfstate"
+    region = "ap-northeast-2"
+  }
+}

@@ -22,6 +22,7 @@ module "eks" {
   subnet_ids = local.private_subnets
 
   # IRSA Enable / OIDC 구성
+  # 파드의 Service Account에서 ALB Controller를 사용할 수 있음 ***
   enable_irsa = true
 
   # Tag Node Security Group
