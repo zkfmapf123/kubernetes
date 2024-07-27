@@ -5,6 +5,19 @@
     terraform apply -target module.network
 ```
 
+## Kubectl 클러스터 접근
+
+```
+  aws --profile kube-admin eks --region ap-northeast-2 update-kubeconfig --name donggyu --alias donggyu
+
+  cat ~/.kube/config
+  kubectl config use-context donggyu
+```
+
+## Kubernetes 
+
+![1](./public/1.png)
+
 ## Issue
 
 ### Kubernetes 구성 시, 이슈
