@@ -1,13 +1,10 @@
 locals {
 
-  ## VPC
-  vpc              = module.network.vpc
-  vpc_id           = local.vpc.vpc_id
-  _public_subnets  = local.vpc.webserver_subnets
-  _private_subnets = local.vpc.was_subnets
+  vpc = data.terraform_remote_state.network.outputs
 
-  public_subnets  = values(local._public_subnets)
-  private_subnets = values(local._private_subnets)
+  vpc_id          = local.vpc.id
+  public_subnets  = local.vpc.public_subnets
+  private_subnets = local.vpc.private_subnets
 
   ## EKS
   cluster_name    = "donggyu"

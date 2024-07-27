@@ -2,8 +2,8 @@
 
 ```sh
     ## module.network 부터 apply
-    cd infra/clsuter terraform apply -target module.network
-    cd infra/cluster terraform apply 
+    cd infra/network terraform apply --auto-approve
+    cd infra/clsuter terraform apply --auto-approve
 
     ## kubeconfig 설정 (하단 Kubectl 클러스터 접근 참조)
     ***
@@ -12,7 +12,6 @@
     cd infra/lb-controller kubectl apply -f cert-manager.yaml ## cert-manager object(NS) 생성
     cd infra/lb-controller terraform apply 
     cd infra/lb-controller kubectl apply -f service-account.yaml ## service-account 생성
-    
 
     ## kubectl alias
     alias k='kubectl'

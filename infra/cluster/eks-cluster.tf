@@ -32,6 +32,7 @@ module "eks" {
 
   # console identity mapping (AWS user)
   # eks configmap aws-auth에 콘솔 사용자 혹은 역할을 등록
+  create_aws_auth_configmap = true
   manage_aws_auth_configmap = true
 
   # EKS를 접근하기 위해서는 IAM Auth를 추가해야 함 (SecretConfig)
@@ -58,37 +59,4 @@ module "eks" {
     "Terraform" : "true"
   }
 
-  depends_on = [
-    module.network
-  ]
 }
-
-############################### Tagging
-# resource "aws_ec2_tag" "private_subnet_tag" {
-#   for_each    = toset(local.private_subnets)
-#   resource_id = each.value
-#   key         = "kubernetes.io/role/internal-elb"
-#   value       = "1"
-# }
-
-# resource "aws_ec2_tag" "private_subnet_cluster_tag" {
-#   for_each    = toset(local.private_subnets)
-#   resource_id = each.value
-#   key         = "kubernetes.io/cluster/${local.cluster_name}"
-#   value       = "owned"
-# }
-
-# resource "aws_ec2_tag" "private_subnet_karpenter_tag" {
-#   for_each    = toset(local.private_subnets)
-#   resource_id = each.value
-#   key         = "karpenter.sh/discovery/${local.cluster_name}"
-#   value       = local.cluster_name
-# }
-
-# // 퍼블릭 서브넷 태그
-# resource "aws_ec2_tag" "public_subnet_tag" {
-#   for_each    = toset(local.public_subnets)
-#   resource_id = each.value
-#   key         = "kubernetes.io/role/elb"
-#   value       = "1"
-# }
