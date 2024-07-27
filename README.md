@@ -5,6 +5,14 @@
     terraform apply -target module.network
 ```
 
+## Folder Architecture
+
+```sh
+  |- infra         ## terraform
+  |- kube-objects  ## kubernetes Object
+  Makefile 
+```
+
 ## Kubectl 클러스터 접근
 
 ```
