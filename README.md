@@ -20,7 +20,14 @@
     alias k='kubectl'
 
     ## kubectl loadbalancer 확인
-    
+    k get pods -n kube-system
+```
+
+## Kubernetes Test Images
+
+```sh 
+  ## images
+  docker run -p 3000:3000 -e PORT 3000 zkfmapf123/shoppings:latest
 ```
 
 ## Folder Architecture
