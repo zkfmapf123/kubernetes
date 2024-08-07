@@ -13,8 +13,14 @@
     cd infra/lb-controller terraform apply 
     cd infra/lb-controller kubectl apply -f service-account.yaml ## service-account 생성
 
+    ## CERT-Manager.md 참조
+    cd infra/lb-controller kubectl apply -f controller.yaml ## LB Controller 생성
+
     ## kubectl alias
     alias k='kubectl'
+
+    ## kubectl loadbalancer 확인
+    
 ```
 
 ## Folder Architecture
@@ -30,7 +36,7 @@
 ## Kubectl 클러스터 접근
 
 ```
-  aws --profile kube-admin eks --region ap-northeast-2 update-kubeconfig --name donggyu --alias donggyu
+  aws --profile admin eks --region ap-northeast-2 update-kubeconfig --name donggyu --alias donggyu
 
   cat ~/.kube/config
   kubectl config use-context donggyu
@@ -79,41 +85,11 @@ Error from server (InternalError): error when creating "controller.yaml": Intern
 ```
 
 - cert-manager의 endpoint 설정이 되어있는지 확인해봐야 함
+- <b> 노도 인스턴스가 최소 3개여야 함 </b>
 
 ```sh
 
 ## cert-manager가 잘 떠있는지 확인
 kubectl get pods -A | grep cert-manager
 
-## cert-manager service 확인
-kubectl -n cert-manager describe service cert-manager-webhook
-
-Name:              cert-manager-webhook
-Namespace:         cert-manager
-Labels:            app=webhook
-                   app.kubernetes.io/component=webhook
-                   app.kubernetes.io/instance=cert-manager
-                   app.kubernetes.io/name=webhook
-                   app.kubernetes.io/version=v1.15.1
-Annotations:       <none>
-Selector:          app.kubernetes.io/component=webhook,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=webhook
-Type:              ClusterIP
-IP Family Policy:  SingleStack
-IP Families:       IPv4
-IP:                172.20.89.251
-IPs:               172.20.89.251
-Port:              https  443/TCP
-TargetPort:        https/TCP
-Endpoints:                              ## 이거없음...
-Session Affinity:  None
-```
-
-- ETCD 용량이 부족하다고 함
-
-![issue-3]
-<a href="https://cert-manager.io/docs/troubleshooting/webhook/"> Issue Page </a>
-<a href="https://help.ovhcloud.com/csm/en-gb-public-cloud-kubernetes-etcd-quota-error?id=kb_article_view&sysparm_article=KB0049739"> 문제해결 </a>
-
-- CloudWatch 를 활용하여 API-Server 로그를 확인하자
-
-![issue-4](./public/issue-4.png)
+![cert-manager](./public/cert-manager.png)

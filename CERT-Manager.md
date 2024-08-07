@@ -9,7 +9,7 @@ curl -L -o cert-manager.yaml https://github.com/cert-manager/cert-manager/releas
 k apply -f cert-manager.yaml
 ```
 
-![cert-manager](../public/2.png)
+![cert-manager](./public/2.png)
 
 - LB Controller
 
