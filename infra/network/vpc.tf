@@ -6,7 +6,7 @@ module "network" {
   vpc_region = "ap-northeast-2"
   vpc_cidr   = "10.0.0.0/16"
 
-  is_enable_nat = false
+  is_enable_nat = true
   webserver_subnets = {
     "a" : "10.0.1.0/24"
     "b" : "10.0.2.0/24"

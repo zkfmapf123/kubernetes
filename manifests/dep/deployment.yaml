@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  namespace: shopping
+  name: shopping
+
+## Pod의 내용들을 포함
+spec: 
+  revisionHistoryLimit: 5 ## 버전 관리를 할 수 있음 (총 몇개까지 저장을 할 것인가?)
+  replicas: 3 ## 총 3개로 유지 
+  strategy:
+    type: RollingUpdate ## Default
+    rollingUpdate: 
+      maxSurge: 25%   ## 4 / 1 씩 롤링이 됨
+      maxUnavailable: 0% ## 
+  selector:
+    matchLabels:
+      apps.kubernetes.io/name: shopping
+  template:
+    metadata: 
+      labels:
+        apps.kubernetes.io/name: shopping
+    ## Container의 내용을 포함
+    spec: 
+      containers:
+        - name: shopping
+          image: "182024812696.dkr.ecr.ap-northeast-2.amazonaws.com/kube-repository:1.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          # resources:
+          #   requests:
+          #     memory: "256Mi"
+          #     cpu: "250m"
+          #   limits:
+          #     memory: "512Mi"
+          #     cpu: "500m"
+      ## 카펜터의 프로비저너 설정
+      nodeSelector:
+        nodeType: service-2023 ## Label이 있는 node에 위치함 
+      ## 카펜터의 프로비저너 설정 (해당 노드에 파드가 위치함)
+      tolerations:
+        - key: service
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+
+## node에 nodeType:service-2023 Label 주기 
+## node에 service:true taint 주기

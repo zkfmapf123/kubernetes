@@ -10,7 +10,7 @@
 
     ## lb_controller
     cd infra/lb-controller kubectl apply -f cert-manager.yaml ## cert-manager object(NS) 생성
-    cd infra/lb-controller terraform apply 
+    cd infra/lb-controller terraform apply --auto-approve
     cd infra/lb-controller kubectl apply -f service-account.yaml ## service-account 생성
 
     ## CERT-Manager.md 참조
@@ -94,9 +94,46 @@ Error from server (InternalError): error when creating "controller.yaml": Intern
 - cert-manager의 endpoint 설정이 되어있는지 확인해봐야 함
 - <b> 노도 인스턴스가 최소 3개여야 함 </b>
 
-```sh
-
-## cert-manager가 잘 떠있는지 확인
+### cert-manager가 잘 떠있는지 확인
 kubectl get pods -A | grep cert-manager
 
 ![cert-manager](./public/cert-manager.png)
+
+### ALB Ingress Controller 를 해도 생성되지 않는다.
+
+- WebConsole 상에서 Service 쪽을 살펴본다.
+- 이벤트 기록에서 이슈 발생하는 이유가 나옴...
+
+![alb-1](./public/alb-1.png)
+
+```sh
+
+## 권한문제가 발생했음.
+Failed deploy model due to AccessDenied: ......
+k8s-shopping-shopping-98a89db919/* because no identity-based policy allows the elasticloadbalancing:AddTags action status code: 403, request id: fc6fb112-d86b-4751-bfb3-2c24ae04a2a2
+```
+
+### Deployment 에서 nodeSelector / Taint의 의미
+
+```
+## 카펜터의 프로비저너 설정
+      nodeSelector:
+        nodeType: service-2023 ## Label이 있는 node에 위치함 
+      ## 카펜터의 프로비저너 설정 (해당 노드에 파드가 위치함)
+      tolerations:
+        - key: service
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+```
+
+- nodeSelect 는 nodeType이 service-2023 이 있는 레이블에 파드들이 위치
+- tolerations은 taint 키 중 service가 true인 것에 위치한다
+
+```sh
+## label 추가
+kubectl label nodes <노드 이름> <레이블 키>=<레이블 값>
+
+## taint 추가
+k taint nodes ip-10-0-100-134.ap-northeast-2.compute.internal service=true:NoSchedule
+```
