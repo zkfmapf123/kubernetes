@@ -115,8 +115,8 @@ k8s-shopping-shopping-98a89db919/* because no identity-based policy allows the e
 
 ### Deployment 에서 nodeSelector / Taint의 의미
 
-```
-## 카펜터의 프로비저너 설정
+```sh
+      ## 카펜터의 프로비저너 설정
       nodeSelector:
         nodeType: service-2023 ## Label이 있는 node에 위치함 
       ## 카펜터의 프로비저너 설정 (해당 노드에 파드가 위치함)

@@ -39,7 +39,7 @@ spec:
           #     cpu: "500m"
       ## 카펜터의 프로비저너 설정
       nodeSelector:
-        nodeType: service-2023 ## Label이 있는 node에 위치함 
+        nodeType: service ## Label이 있는 node에 위치함 
       ## 카펜터의 프로비저너 설정 (해당 노드에 파드가 위치함)
       tolerations:
         - key: service

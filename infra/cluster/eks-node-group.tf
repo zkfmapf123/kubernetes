@@ -63,6 +63,20 @@ resource "aws_eks_node_group" "initial-node-group" {
   capacity_type  = "SPOT"
   ami_type       = "AL2_ARM_64"
 
+  labels = {
+    "nodeType" : "service"
+  }
+
+  taint {
+    key    = "service"
+    value  = "true"
+    effect = "NO_SCHEDULE"
+
+    ## NO_SCHEDULE
+    ## NO_EXECUTE
+    ## PREFER_NO_SCHEDULE
+  }
+
   ## 이게 엄청 중요함
   depends_on = [
     aws_iam_role_policy_attachment.att-1,
@@ -72,3 +86,6 @@ resource "aws_eks_node_group" "initial-node-group" {
     module.eks
   ]
 }
+
+## 서비스 노드 지정하기 (Label + Taint)
+
