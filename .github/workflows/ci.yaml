@@ -8,6 +8,7 @@ on:
 env:
     AWS_REGION: ap-northeast-2
     ECR_REPO: hello-world
+    APP_NAMEL: hello
 
 jobs:
   deploy:
@@ -38,8 +39,6 @@ jobs:
             IMAGE_TAG: ${{ github.sha }}
         run: |
             cd test-hello-world-svc
-
-            export VERSION=$GITHUB_RUN_NUMBER
             docker build -t $ECR_REGISTRY/$ECR_REPO:$GITHUB_RUN_NUMBER .
             docker push $ECR_REGISTRY/$ECR_REPO:$GITHUB_RUN_NUMBER
             echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPO:$GITHUB_RUN_NUMBER"
