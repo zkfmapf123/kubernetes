@@ -1,26 +1,44 @@
-name: CI
+name: Deploy to ECR
 
 on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
+
+env:
+    AWS_REGION: ap-northeast-2
+    ECR_REPO: hello-world
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
+      - name: Configure AWS Credentials
+        uses: docker/setup-buildx-action@v2
 
-      - name: List directory contents
+      - name: Log in to Amazon ECR
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+    
+      - name: Push ECR
+        id: build-image
+        env:
+            ECR_REGISTRY: ${{steps.login-ecr.outputs.registry }}
+            IMAGE_TAG: ${{ github.sha }}
         run: |
-            ls -al
+            docker build -t $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG .
+            docker push $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
+            echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG"
+
+    
