@@ -21,3 +21,5 @@ resource "aws_iam_role_policy" "controller" {
   policy      = data.http.iam_policy.body
   role        = module.iam_assumable_role_alb_controller.iam_role_name
 }
+
+## elasticloadbalancing:AddTags 인라인 정책 추가해야 함...

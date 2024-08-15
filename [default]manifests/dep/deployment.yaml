@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata: 
-  namespace: shopping
-  name: shopping
+  namespace: hello
+  name: hello
 
 ## Pod의 내용들을 포함
 spec: 
@@ -15,16 +15,16 @@ spec:
       maxUnavailable: 0% ## 
   selector:
     matchLabels:
-      apps.kubernetes.io/name: shopping
+      apps.kubernetes.io/name: hello
   template:
     metadata: 
       labels:
-        apps.kubernetes.io/name: shopping
+        apps.kubernetes.io/name: hello
     ## Container의 내용을 포함
     spec: 
       containers:
-        - name: shopping
-          image: "182024812696.dkr.ecr.ap-northeast-2.amazonaws.com/kube-repository:1.0"
+        - name: hello
+          image: "182024812696.dkr.ecr.ap-northeast-2.amazonaws.com/ecr_repository:latest"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

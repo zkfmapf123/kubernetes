@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  namespace: shopping
-  name: shopping
+  namespace: hello
+  name: hello
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/load-balancer-name: leedonggyu-alb
@@ -19,6 +19,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: shopping
+                name: hello
                 port:
                   number: 3000

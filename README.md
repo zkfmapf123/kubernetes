@@ -84,13 +84,18 @@ node_security_group_additional_rules = {
 ```
 - eks-node-group을 따로 구성 (eks-node-group.tf)
 
-### lb contorller 설정 시, webhook 이슈
+### lb contorller 설정 시, 인증서 관련 이슈
 
 ```sh
 Error from server (InternalError): error when creating "controller.yaml": Internal error occurred: failed calling webhook "webhook.cert-manager.io": failed to call webhook: Post "https://cert-manager-webhook.cert-manager.svc:443/validate?timeout=30s": no endpoints available for service "cert-manager-webhook"
 Error from server (InternalError): error when creating "controller.yaml": Internal error occurred: failed calling webhook "webhook.cert-manager.io": failed to call webhook: Post "https://cert-manager-webhook.cert-manager.svc:443/validate?timeout=30s": no endpoints available for service "cert-manager-webhook"
 ```
 
+- 일단 에러로그를 확인하자...
+```sh
+  kubectl get pods -n cert-manager | grep webhook
+  kubectl describe pod [pod-name] -n cert-manager 
+```
 - cert-manager의 endpoint 설정이 되어있는지 확인해봐야 함
 - <b> 노도 인스턴스가 최소 3개여야 함 </b>
 
@@ -136,4 +141,19 @@ kubectl label nodes <노드 이름> <레이블 키>=<레이블 값>
 
 ## taint 추가
 k taint nodes ip-10-0-100-134.ap-northeast-2.compute.internal service=true:NoSchedule
+```
+
+### Helm Ingress Issue
+
+```
+Error: INSTALLATION FAILED: 1 error occurred:
+        * Internal error occurred: failed calling webhook "vingress.elbv2.k8s.aws": failed to call webhook: Post "https://aws-load-balancer-webhook-service.kube-system.svc:443/validate-networking-v1-ingress?timeout=10s": no endpoints available for service "aws-load-balancer-webhook-service"
+```
+
+- ALB 로그를 보자
+
+```sh
+   k get deploy -n kube-system
+
+   k describe pod [pods-name] -n kube-system
 ```
