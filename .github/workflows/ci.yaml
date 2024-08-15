@@ -38,8 +38,10 @@ jobs:
             IMAGE_TAG: ${{ github.sha }}
         run: |
             cd test-hello-world-svc
-            docker build -t $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG .
-            docker push $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
-            echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG"
+
+            export VERSION=$GITHUB_RUN_NUMBER
+            docker build -t $ECR_REGISTRY/$ECR_REPO:$GITHUB_RUN_NUMBER .
+            docker push $ECR_REGISTRY/$ECR_REPO:$GITHUB_RUN_NUMBER
+            echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPO:$GITHUB_RUN_NUMBER"
 
     
