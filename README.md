@@ -95,6 +95,8 @@ Error from server (InternalError): error when creating "controller.yaml": Intern
 ```sh
   kubectl get pods -n cert-manager | grep webhook
   kubectl describe pod [pod-name] -n cert-manager 
+
+  ## Webhook은 taint가 true면 설정안됨
 ```
 - cert-manager의 endpoint 설정이 되어있는지 확인해봐야 함
 - <b> 노도 인스턴스가 최소 3개여야 함 </b>
@@ -156,4 +158,7 @@ Error: INSTALLATION FAILED: 1 error occurred:
    k get deploy -n kube-system
 
    k describe pod [pods-name] -n kube-system
+
+   ## 대부분 taint 이슈
+   kubectl taint nodes <노드 이름> service=true:NoSchedule
 ```

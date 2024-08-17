@@ -23,3 +23,26 @@ resource "aws_iam_role_policy" "controller" {
 }
 
 ## elasticloadbalancing:AddTags 인라인 정책 추가해야 함...
+resource "aws_iam_policy" "alb_policy" {
+  name = "eks_alb_policy"
+  path = "/"
+  description = "eks alb policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "elasticloadbalancing:AddTags"
+        ],
+        Effect : "Allow",
+        "Resource" = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach" {
+  role = module.iam_assumable_role_alb_controller.iam_role_name
+  policy_arn = aws_iam_policy.alb_policy.arn
+}

@@ -6,7 +6,7 @@ appName: "hello-world"
 replicaCount: 2
 
 image:
-  repository: 182024812696.dkr.ecr.ap-northeast-2.amazonaws.com/hello-world:latest
+  repository: 182024812696.dkr.ecr.ap-northeast-2.amazonaws.com/hello-world
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"

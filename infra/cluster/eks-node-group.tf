@@ -46,16 +46,17 @@ resource "aws_iam_role_policy_attachment" "att-4" {
   role       = aws_iam_role.eks-worker-role.name
 }
 
-resource "aws_eks_node_group" "initial-node-group" {
+######################################################## NW nodeGroup ########################################################
+resource "aws_eks_node_group" "network-node-group" {
   cluster_name    = module.eks.cluster_name
-  node_group_name = "initial-node-group"
+  node_group_name = "network-node-group"
   node_role_arn   = aws_iam_role.eks-worker-role.arn
   subnet_ids      = local.private_subnets
 
   scaling_config {
-    desired_size = 3
-    max_size     = 5
-    min_size     = 3
+    desired_size = 1
+    max_size     = 3
+    min_size     = 1
   }
 
   instance_types = ["t4g.small"]
@@ -64,17 +65,7 @@ resource "aws_eks_node_group" "initial-node-group" {
   ami_type       = "AL2_ARM_64"
 
   labels = {
-    "nodeType" : "service"
-  }
-
-  taint {
-    key    = "service"
-    value  = "true"
-    effect = "NO_SCHEDULE"
-
-    ## NO_SCHEDULE
-    ## NO_EXECUTE
-    ## PREFER_NO_SCHEDULE
+    "nodeType" : "network"
   }
 
   ## 이게 엄청 중요함
@@ -87,5 +78,45 @@ resource "aws_eks_node_group" "initial-node-group" {
   ]
 }
 
-## 서비스 노드 지정하기 (Label + Taint)
+######################################################## SVC nodeGroup ########################################################
+resource "aws_eks_node_group" "svc-node-group" {
+  cluster_name    = module.eks.cluster_name
+  node_group_name = "svc-node-group"
+  node_role_arn   = aws_iam_role.eks-worker-role.arn
+  subnet_ids      = local.private_subnets
+
+  scaling_config {
+    desired_size = 2
+    max_size     = 3
+    min_size     = 2
+  }
+
+  instance_types = ["t4g.small"]
+  disk_size      = 20
+  capacity_type  = "SPOT"
+  ami_type       = "AL2_ARM_64"
+
+  labels = {
+    "nodeType" : "service"
+  }
+
+  # taint {
+  #   key    = "service"
+  #   value  = "true"
+  #   effect = "NO_SCHEDULE"
+
+  #   ## NO_SCHEDULE
+  #   ## NO_EXECUTE
+  #   ## PREFER_NO_SCHEDULE
+  # }
+
+  ## 이게 엄청 중요함
+  depends_on = [
+    aws_iam_role_policy_attachment.att-1,
+    aws_iam_role_policy_attachment.att-2,
+    aws_iam_role_policy_attachment.att-3,
+    aws_iam_role_policy_attachment.att-4,
+    module.eks
+  ]
+}
 
